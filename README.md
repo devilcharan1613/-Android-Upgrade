@@ -1,43 +1,52 @@
 # Android Upgrade
 
-A native Kotlin/Jetpack Compose app providing compatible modern utilities for Android 10+ devices. It does **not** upgrade the operating system or replace protected system UI.
+Native Kotlin and Jetpack Compose utility app for Android 10+ devices. The app is offline-first and does not upgrade the Android operating system.
 
-## Current milestone: foundation (0.1.1)
+## Current version: 0.2.0 (development)
 
-Implemented:
-- Native Compose app shell with Home, Features and Settings.
-- Android 10 minimum SDK (API 29), compileSdk 36.
-- Device API/release compatibility reporting.
-- Offline manifest: no INTERNET permission, analytics, ads, login or cloud SDK.
-- Optional launcher HOME activity entry (early landing-screen preview only).
-- Settings shortcuts for system, accessibility, notification access and Wi-Fi settings.
-- Feature directory clearly labels starter, permission-dependent and planned modules.
-- Settings shortcut failures now show visible feedback instead of failing silently.
-- Android compatibility policy is separated from device APIs and has meaningful boundary/version unit tests.
+### Working in this milestone
+- Home dashboard with Android API level and charge percentage.
+- In-app Control Center with flashlight control (asks for camera permission) and shortcuts to Wi-Fi, Bluetooth, display, battery saver and sound settings.
+- Installed-app drawer with app-name search and launch actions.
+- Optional HOME entry point that opens the app drawer.
+- Offline command helper for Wi-Fi, Bluetooth, display, Android settings, app drawer and battery status.
+- Private local note stored in app-private preferences (not encrypted).
+- Feature directory with explicit implementation status.
+- No INTERNET permission, accounts, advertising, analytics or cloud service.
 
-Not yet implemented: full control center, notification listener/history, encrypted vault, battery diagnostics suite, floating tools, accessibility service, camera scanner, automation engine, local LLM, full launcher customization and release signing. These must not be represented as complete.
+### Still incomplete
+- Full notification manager and notification history.
+- Encrypted privacy vault and app lock.
+- Full battery diagnostics and performance monitoring.
+- Multitasking/floating window tools.
+- Dedicated accessibility service features.
+- Camera/media suite.
+- Automation and reminder scheduler.
+- Local generative AI model.
+- Full launcher customization, widgets and icon packs.
+- Release signing and production hardening.
 
-## Build and verification
+## Build
 
-Open in Android Studio with JDK 17 or 21 and Android SDK Platform 36.
+Open the project in Android Studio with JDK 17 and Android SDK Platform 36.
 
 ```bash
-gradle wrapper --gradle-version 8.11.1
-./gradlew assembleDebug
-./gradlew test
-./gradlew lint
+gradle assembleDebug
+gradle test
+gradle lint
 ```
 
-GitHub Actions runs the same debug build, unit tests and lint checks on pushes and pull requests.
+GitHub Actions runs the same checks on pushes and pull requests. Download the generated debug APK from the workflow run's Artifacts section.
 
-## Privacy
+## Permissions and privacy
 
-No INTERNET permission is declared. No analytics, ads, login or cloud service. Future features requiring special access must explain why, request explicit consent and provide a fallback.
+- CAMERA is requested only when the user activates the flashlight. If denied, the rest of the app remains usable.
+- App visibility is limited to activities that declare the standard launcher intent.
+- No INTERNET permission is declared.
+- The local note is app-private but not encrypted. Do not store passwords or highly sensitive information in it.
 
-## Compatibility
+## Platform limitations
 
-minSdk 29 means Android 10+ can install the app; it does not mean every feature works on every device. Hardware, Android API level, OEM behavior and explicit permissions determine availability.
+Android protects system Quick Settings and privileged settings. This app provides its own in-app shortcuts and opens the relevant Android settings pages; it does not silently alter protected system controls. Hardware availability, Android API level and OEM behavior affect functionality.
 
-## Audit notes
-
-See [DEVELOPER_AUDIT.md](DEVELOPER_AUDIT.md) for the source review, fixed defects, automated verification and outstanding risks. A successful CI build is not a substitute for physical-device testing across Android 10–16.
+See [DEVELOPER_AUDIT.md](DEVELOPER_AUDIT.md) for the implementation inventory, audit findings, test status and remaining work.
