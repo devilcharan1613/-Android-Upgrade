@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- No INTERNET permission: this app is designed to run offline. -->
+    <!-- No INTERNET permission: all current features work locally. -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <queries>
@@ -13,7 +13,10 @@
         android:label="Android Upgrade"
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidUpgrade">
-        <activity android:name=".features.launcher.HomeLauncherActivity" android:exported="true" android:label="Android Upgrade Home">
+        <activity
+            android:name=".features.launcher.HomeLauncherActivity"
+            android:exported="true"
+            android:label="Android Upgrade Home">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.HOME" />
