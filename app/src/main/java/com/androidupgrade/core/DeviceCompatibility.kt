@@ -2,6 +2,26 @@ package com.androidupgrade.core
 
 import android.os.Build
 
+/**
+ * Pure API-level policy kept separate from Android device access so it can be unit tested.
+ */
+object CompatibilityPolicy {
+    const val MIN_SUPPORTED_API = 29
+
+    fun isSupported(apiLevel: Int): Boolean = apiLevel >= MIN_SUPPORTED_API
+
+    fun message(apiLevel: Int): String = when {
+        apiLevel < MIN_SUPPORTED_API -> "Android 10 or newer is required."
+        apiLevel >= 36 -> "Android 16 detected. Availability depends on device support and permissions."
+        apiLevel >= 35 -> "Android 15 detected. Availability depends on device support and permissions."
+        apiLevel >= 34 -> "Android 14 detected. Availability depends on device support and permissions."
+        apiLevel >= 33 -> "Android 13 detected. Availability depends on device support and permissions."
+        apiLevel >= 31 -> "Android 12 detected. Availability depends on device support and permissions."
+        apiLevel >= 30 -> "Android 11 detected. Availability depends on device support and permissions."
+        else -> "Android 10 detected. Some newer platform features are unavailable."
+    }
+}
+
 object DeviceCompatibility {
     data class DeviceReport(
         val androidRelease: String,
@@ -12,19 +32,12 @@ object DeviceCompatibility {
 
     fun current(): DeviceReport {
         val api = Build.VERSION.SDK_INT
-        val supported = api >= Build.VERSION_CODES.Q
-        val release = Build.VERSION.RELEASE ?: "Unknown"
-        val message = when {
-            !supported -> "Android 10 or newer is required."
-            api >= 36 -> "Android 16 detected. Availability depends on device support and permissions."
-            api >= 35 -> "Android 15 detected. Availability depends on device support and permissions."
-            api >= 34 -> "Android 14 detected. Availability depends on device support and permissions."
-            api >= 33 -> "Android 13 detected. Availability depends on device support and permissions."
-            api >= 31 -> "Android 12 detected. Availability depends on device support and permissions."
-            api >= 30 -> "Android 11 detected. Availability depends on device support and permissions."
-            else -> "Android 10 detected. Some newer platform features are unavailable."
-        }
-        return DeviceReport(release, api, supported, message)
+        return DeviceReport(
+            androidRelease = Build.VERSION.RELEASE ?: "Unknown",
+            apiLevel = api,
+            supportedByApp = CompatibilityPolicy.isSupported(api),
+            compatibilityMessage = CompatibilityPolicy.message(api)
+        )
     }
 
     fun supportsApi(requiredApi: Int): Boolean = Build.VERSION.SDK_INT >= requiredApi
