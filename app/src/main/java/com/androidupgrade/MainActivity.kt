@@ -5,6 +5,7 @@ import android.os.BatteryManager
 import android.os.Bundle
 import android.content.Context
 import android.provider.Settings
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -165,7 +166,7 @@ private fun HomePage(modifier: Modifier, onExplore: () -> Unit) {
         }
         item {
             Card {
-                Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text("Offline by design", fontWeight = FontWeight.SemiBold)
                     Text("No internet permission, account, ads, analytics or cloud service is included.")
                     Text("Android Upgrade does not upgrade or replace your phone's operating system.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -236,7 +237,16 @@ private fun SettingsPage(modifier: Modifier) {
 private fun SettingsButton(label: String, action: String, context: Context) {
     Button(
         onClick = {
-            runCatching { context.startActivity(Intent(action).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
+            val intent = Intent(action)
+            val canOpen = intent.resolveActivity(context.packageManager) != null
+            if (canOpen) {
+                runCatching { context.startActivity(intent) }
+                    .onFailure {
+                        Toast.makeText(context, "Unable to open $label on this device.", Toast.LENGTH_SHORT).show()
+                    }
+            } else {
+                Toast.makeText(context, "$label is not available on this device.", Toast.LENGTH_SHORT).show()
+            }
         },
         modifier = Modifier.fillMaxWidth()
     ) { Text(label) }
