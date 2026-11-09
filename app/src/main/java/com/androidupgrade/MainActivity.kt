@@ -229,7 +229,7 @@ private fun SettingsPage(modifier: Modifier) {
                 }
             }
         }
-        item { Text("Android Upgrade 0.1.0 · Offline foundation", color = MaterialTheme.colorScheme.onSurfaceVariant) }
+        item { Text("Android Upgrade 0.1.1 · Offline foundation", color = MaterialTheme.colorScheme.onSurfaceVariant) }
     }
 }
 
