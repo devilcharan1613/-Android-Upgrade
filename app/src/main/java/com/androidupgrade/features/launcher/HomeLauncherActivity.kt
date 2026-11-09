@@ -1,9 +1,9 @@
 package com.androidupgrade.features.launcher
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,7 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
-class HomeLauncherActivity : Activity() {
+class HomeLauncherActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -25,8 +25,7 @@ class HomeLauncherActivity : Activity() {
                 LauncherLanding(
                     onOpenSettings = { startActivity(Intent(Settings.ACTION_SETTINGS)) },
                     onOpenApp = {
-                        val launch = packageManager.getLaunchIntentForPackage(packageName)
-                        if (launch != null) startActivity(launch) else finish()
+                        packageManager.getLaunchIntentForPackage(packageName)?.let(::startActivity) ?: finish()
                     }
                 )
             }
@@ -42,7 +41,7 @@ private fun LauncherLanding(onOpenSettings: () -> Unit, onOpenApp: () -> Unit) {
         verticalArrangement = Arrangement.Center
     ) {
         Text("Android Upgrade Home", style = MaterialTheme.typography.headlineMedium)
-        Text("This is an early launcher landing screen, not a complete customizable launcher.")
+        Text("Early launcher preview. Full app drawer and customization are not implemented yet.")
         Button(onClick = onOpenApp) { Text("Open Android Upgrade") }
         Button(onClick = onOpenSettings) { Text("Device settings") }
     }
