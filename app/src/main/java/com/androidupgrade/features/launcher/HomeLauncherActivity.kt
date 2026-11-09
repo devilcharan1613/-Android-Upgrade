@@ -5,10 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import com.androidupgrade.MainActivity
 
-/**
- * Optional HOME entry point. Opens the app's installed-app drawer; users can
- * restore their previous launcher from Android's Home app settings at any time.
- */
+/** Optional HOME entry point that opens the app's installed-app drawer. */
 class HomeLauncherActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
